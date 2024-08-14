@@ -1,10 +1,49 @@
-﻿namespace DomainDrivenDesign.Domain.Orders;
+﻿using DomainDrivenDesign.Domain.Abstractions;
+using DomainDrivenDesign.Domain.Shared;
 
-public sealed class Order
+namespace DomainDrivenDesign.Domain.Orders;
+
+public sealed class Order : Entity
 {
-        public Guid Id { get; set; }
-        public string OrderNUmber { get; set; } = null!;
-        public DateTime CreatedDate { get; set; }
-        public OrderStatus Status { get; set; }
-        public ICollection<OrderLine> OrderLines { get; set; } = null!;
-    }
+	public Order(Guid id, string orderNUmber, DateTime createdDate, OrderStatus status) : base(id)
+	{
+		OrderNUmber = orderNUmber;
+		CreatedDate = createdDate;
+		Status = status;
+	}
+
+	public string OrderNUmber { get; private set; } = null!;
+	public DateTime CreatedDate { get; private set; }
+	public OrderStatus Status { get; private set; }
+	public ICollection<OrderLine> OrderLines { get; private set; } = null!;
+
+	public void CreateOrder(List<CreateOrderDto> createOrderDtos)
+	{
+		foreach (var item in createOrderDtos)
+		{
+			if (item.Quantity < 1)
+			{
+				throw new ArgumentException("Sipariş adedi 1'den az olamaz..!");
+			}
+
+			OrderLine orderLine = new OrderLine(
+				Guid.NewGuid(),
+				Id,
+				item.ProductId,
+				item.Quantity,
+				new(item.Amount, Currency.FromCode(item.Curency)));
+
+			OrderLines.Add(orderLine);
+		}
+	}
+
+	public void RemoveOrderLine(Guid orderlineId)
+	{
+		var orderLine = OrderLines.FirstOrDefault(x => x.Id == orderlineId);
+		if (orderLine is null)
+		{
+			throw new ArgumentException("Silmek istediğiniz sipraiş kalemi bulunamadı..!");
+		}
+		OrderLines.Remove(orderLine);
+	}
+}

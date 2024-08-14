@@ -1,11 +1,31 @@
-﻿namespace DomainDrivenDesign.Domain.Products;
+﻿using DomainDrivenDesign.Domain.Abstractions;
+using DomainDrivenDesign.Domain.Categories;
+using DomainDrivenDesign.Domain.Shared;
 
-public sealed class Product
+namespace DomainDrivenDesign.Domain.Products;
+
+public sealed class Product : Entity
 {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
-        public string Currency { get; set; }
-        public Guid CategoryId { get; set; }
-    }
+	public Product(Guid id,Name name, int quantity, Money price, Guid categoryId, Category category) : base(id)
+	{
+		Name = name;
+		Quantity = quantity;
+		Price = price;
+		CategoryId = categoryId;
+		Category = category;
+	}
+
+	public Name Name { get; private set; } = null!;
+    public int Quantity { get; private set; }
+    public Money Price { get; private set; }
+    public Guid CategoryId { get; private set; }
+    public Category Category { get; set; }
+
+	public void Update(string name, int quantity, decimal amount, string currency, Guid categoryId)
+	{
+		Name = new(name);
+		Quantity = quantity;
+		Price = new(amount, Currency.FromCode(currency));
+		CategoryId = categoryId;
+	}
+}
