@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainDrivenDesign.Domain.Shared;
 
+// value typlerı bu şekilde kullandığımızda bazı validasyonları daha iyi yapabiliyoruz
 public sealed record Name
 {
 	public string Value { get; init; }

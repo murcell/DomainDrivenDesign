@@ -5,6 +5,11 @@ namespace DomainDrivenDesign.Domain.Orders;
 
 public sealed class Order : Entity
 {
+	private Order(Guid id) : base(id)
+	{
+
+	}
+
 	public Order(Guid id, string orderNUmber, DateTime createdDate, OrderStatus status) : base(id)
 	{
 		OrderNUmber = orderNUmber;
@@ -15,7 +20,7 @@ public sealed class Order : Entity
 	public string OrderNUmber { get; private set; } = null!;
 	public DateTime CreatedDate { get; private set; }
 	public OrderStatus Status { get; private set; }
-	public ICollection<OrderLine> OrderLines { get; private set; } = null!;
+	public ICollection<OrderLine> OrderLines { get; private set; } = new List<OrderLine>();
 
 	public void CreateOrder(List<CreateOrderDto> createOrderDtos)
 	{
@@ -46,4 +51,6 @@ public sealed class Order : Entity
 		}
 		OrderLines.Remove(orderLine);
 	}
+
+
 }

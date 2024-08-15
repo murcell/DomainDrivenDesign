@@ -8,7 +8,7 @@ namespace DomainDrivenDesign.Domain.Orders
 {
 	public interface IOrderRepository
 	{
-		Task OrderCreateAsync(List<CreateOrderDto> createOrderDtos, CancellationToken cancellationToken=default);
+		Task<Order> OrderCreateAsync(List<CreateOrderDto> createOrderDtos, CancellationToken cancellationToken=default);
 		Task<List<Order>> GetAllAsync(CancellationToken cancellationToken = default);
 	}
 }
